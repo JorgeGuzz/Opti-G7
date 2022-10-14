@@ -1,5 +1,11 @@
 from gurobipy import Model, GRB, quicksum
 
+from carga_datos.Yt import obtener_Yt
+from carga_datos.Xts1 import obtener_Xts1
+from carga_datos.Xts2 import obtener_Xts2
+from carga_datos.Xts3 import obtener_Xts3
+from carga_datos.Xts4 import obtener_Xts4
+
 # ----------------------- Generacion del modelo ------------------------
 model = Model()
 model.setParam("TimeLimit", 1800)  # Establece el tiempo m ́aximo en segundos
@@ -13,6 +19,12 @@ S1_ = range(1, s1 + 1)
 S2_ = range(1, s2 + 1)
 S3_ = range(1, s3 + 1)
 S4_ = range(1, s4 + 1)
+#----------------------- Importacion parametros ------------------------
+terreno_cumple_s1 = obtener_Xts1()
+terreno_cumple_s2 = obtener_Xts2()
+terreno_cumple_s3 = obtener_Xts3()
+terreno_cumple_s4 = obtener_Xts4()
+terreno_cumple_trabajos = obtener_Yt()
 # ----------------------- Creacion de Parametros ------------------------
 PR =
 CT = {(t):}
@@ -22,17 +34,17 @@ P = {(i, d): }
 D = {(i):}
 A = {(i):}
 DISTMAX =
-XS1 = {(t, s): }
-XS2 = {(t, s): }
-XS3 = {(t, s): }
-XS4 = {(t, s): }
+XS1 = {(t, s): terreno_cumple_s1[t - 1][s - 1] for t in T_ for s in S1_}
+XS2 = {(t, s): terreno_cumple_s2[t - 1][s - 1] for t in T_ for s in S2_}
+XS3 = {(t, s): terreno_cumple_s3[t - 1][s - 1] for t in T_ for s in S3_}
+XS4 = {(t, s): terreno_cumple_s4[t - 1][s - 1] for t in T_ for s in S4_}
 DMIN = {(d):}
 C = {(t, c): }
 CMAX = {(c):}
 ELIM = {(c, i): }
 DMAX = {(c):}
 AMAX = {(c):}
-Y = {(t):}
+Y = {(t): terreno_cumple_trabajos[t - 1] for t in T_}
 MINCOM =
 
 
