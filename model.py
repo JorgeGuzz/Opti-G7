@@ -34,6 +34,8 @@ DMAX = {(c):}
 AMAX = {(c):}
 Y = {(t):}
 MINCOM =
+SE = {(i):}
+ST = {(t):}
 
 
 # ----------------------- Creacion de Variables ------------------------
@@ -76,12 +78,12 @@ model.addConstrs((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
 model.addConstrs((quicksum(B[c] for c in C_) >= MINCOM), name="R8")
 
 # R9
-model.addConstrs((Z[i, t] * S[i] <= S[t]
-                 for i in I_ for t in T_ ), name="R10")
+model.addConstrs((quicksum(XS4[t, s] for s in S4_) + Y[t] >=
+                 quicksum(Z[i, t] for i in Iprima_) for t in T_), name="R9")
 
 # R10
-model.addConstrs((Z[i, t] * C[t, c] * D[i] <= DMAX[c]
-                 for i in I_ for t in T_ for c in C_), name="R10")
+model.addConstrs((Z[i, t] * SE[i] <= ST[t]
+                 for i in I_ for t in T_), name="R10")
 
 # R11
 model.addConstrs((Z[i, t] * C[t, c] * A[i] <= AMAX[c]
