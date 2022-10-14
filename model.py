@@ -19,7 +19,6 @@ CT = {(t):}
 TMIN =
 CE = {(i):}
 P = {(i, d): }
-D = {(i):}
 A = {(i):}
 DISTMAX =
 XS1 = {(t, s): }
@@ -30,10 +29,11 @@ DMIN = {(d):}
 C = {(t, c): }
 CMAX = {(c):}
 ELIM = {(c, i): }
-DMAX = {(c):}
 AMAX = {(c):}
 Y = {(t):}
 MINCOM =
+SE = {(i):}
+ST = {(t):}
 
 
 # ----------------------- Creacion de Variables ------------------------
@@ -80,8 +80,8 @@ model.addConstrs((quicksum(XS4[t, s] for s in S4_) + Y[t] >=
                  quicksum(Z[i, t] for i in Iprima_) for t in T_), name="R9")
 
 # R10
-model.addConstrs((Z[i, t] * C[t, c] * D[i] <= DMAX[c]
-                 for i in I_ for t in T_ for c in C_), name="R10")
+model.addConstrs((Z[i, t] * SE[i] <= ST[t]
+                 for i in I_ for t in T_), name="R10")
 
 # R11
 model.addConstrs((Z[i, t] * C[t, c] * A[i] <= AMAX[c]
