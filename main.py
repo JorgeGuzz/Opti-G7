@@ -99,12 +99,12 @@ model.addConstrs((quicksum(quicksum(Z[i, t] * C[t, c] * quicksum(P[i, d]
 model.addConstrs((quicksum(Z[i, t] * C[t, c] for t in T_)
                  <= ELIM[c, i] for c in C_ for i in I_), name="R6")
 
-# R7 falta definir M grande
-model.addConstrs((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
-                 for i in I_) >= 1 + M * (B[c] - 1) for c in C_), name="R7")
+# R7 
+model.addConstrs(((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
+                 for i in I_)) >= 1 + M * (B[c] - 1) for c in C_), name="R7")
 
 # R8
-model.addConstr((quicksum(B[c] for c in C_) >= MINCOM), name="R8")
+model.addConstr(((quicksum(B[c] for c in C_)) >= MINCOM), name="R8")
 
 # R9
 model.addConstrs((quicksum(XS4[t, s] for s in S4_) + Y[t] >=
@@ -134,6 +134,7 @@ print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: 
 print("+--------------------------------------------------------------------------------------------------+\n")
 print("Para lograr este valor se deben construir en los siguientes terrenos y los edificios respectivos.\n")
 
+total_beneficiados_decil = [0,0,0,0,0,0,0,0]
 print("+----------+----------+")
 print("|Terreno   |Edificio  |")
 print("+----------+----------+")
@@ -142,8 +143,17 @@ for t in T_:
         if Z[i,t].x == 1:
             cadena = "|{:<10}|{:<10}|".format(t, i)
             print(cadena)
-print("+----------+----------+")
+            for d in D_:
+                total_beneficiados_decil[d - 1] += P[i,d]
+print("+----------+----------+\n")
 
+print("+--------+------------+")
+print("|Decil   |Beneficiados|")
+print("+--------+------------+")
+for d in D_:
+    cadena = "|{:<8}|{:<12}|".format(d, total_beneficiados_decil[d - 1])
+    print(cadena)
+print("+--------+------------+")
 
 with open("resultados/resultados_Z.csv", "w") as archivo: 
     archivo.write("Z,i,t")
