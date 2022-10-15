@@ -17,7 +17,7 @@ s4 = 39
 
 # ------------------------- OTROS --------------------------
 # presupuesto total
-PR = 22000000/2
+PR = 9500000
 
 # minimo de comunas beneficiadas 
 MINCOM = 2
