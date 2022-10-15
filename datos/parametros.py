@@ -10,7 +10,7 @@ p = 2000
 # numero de comunas 
 l = 6
 # numero de cada servicio 
-s1 = 4314   # en total 4314
+s1 = 4314
 s2 = 82
 s3 = 327 
 s4 = 64

@@ -1,11 +1,11 @@
-def obtener_Xts2():
-    with open("datos/Xts2.csv") as archivo:
+def obtener_XS2ts():
+    with open("datos/XS2ts.csv") as archivo:
         cumple = archivo.readlines()
         cumple = list(map(lambda x: x.strip().split(','), cumple))
         cumple = list(map(lambda x: list(map(lambda y: int(y), x)), cumple))
     return cumple
 
 if __name__ == "__main__":
-    cumple = obtener_Xts2()
+    cumple = obtener_XS2ts()
     diccionario = {(t, s): cumple[t - 1][s - 1] for t in range(1, 2000 + 1) for s in range(1, 600 + 1)}
     print(diccionario)

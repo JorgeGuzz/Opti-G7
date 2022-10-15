@@ -2,10 +2,10 @@ from gurobipy import Model, GRB, quicksum
 
 from datos.parametros import n,m,p,l,s1,s2,s3,s4,PR,MINCOM,M
 from carga_datos.Yt import obtener_Yt
-from carga_datos.Xts1 import obtener_Xts1
-from carga_datos.Xts2 import obtener_Xts2
-from carga_datos.Xts3 import obtener_Xts3
-from carga_datos.Xts4 import obtener_Xts4
+from carga_datos.XS1ts import obtener_XS1ts
+from carga_datos.XS2ts import obtener_XS2ts
+from carga_datos.XS3ts import obtener_XS3ts
+from carga_datos.XS4ts import obtener_XS4ts
 from carga_datos.SEi import obtener_SEi
 from carga_datos.STt import obtener_STt
 from carga_datos.CTt import obtener_CTt
@@ -32,10 +32,10 @@ S2_ = range(1, s2 + 1)
 S3_ = range(1, s3 + 1)
 S4_ = range(1, s4 + 1)
 #----------------------- Importacion parametros ------------------------
-terreno_cumple_s1 = obtener_Xts1()
-terreno_cumple_s2 = obtener_Xts2()
-terreno_cumple_s3 = obtener_Xts3()
-terreno_cumple_s4 = obtener_Xts4()
+terreno_cumple_s1 = obtener_XS1ts()
+terreno_cumple_s2 = obtener_XS2ts()
+terreno_cumple_s3 = obtener_XS3ts()
+terreno_cumple_s4 = obtener_XS4ts()
 terreno_cumple_trabajos = obtener_Yt()
 superficie_terrenos = obtener_STt()
 superficie_edificios = obtener_SEi()
