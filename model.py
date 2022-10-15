@@ -1,17 +1,29 @@
 from gurobipy import Model, GRB, quicksum
 
+from datos.parametros import n,m,p,l,s1,s2,s3,s4,PR,MINCOM,M
 from carga_datos.Yt import obtener_Yt
 from carga_datos.Xts1 import obtener_Xts1
 from carga_datos.Xts2 import obtener_Xts2
 from carga_datos.Xts3 import obtener_Xts3
 from carga_datos.Xts4 import obtener_Xts4
+from carga_datos.SEi import obtener_SEi
+from carga_datos.STt import obtener_STt
+from carga_datos.CTt import obtener_CTt
+from carga_datos.DMINd import obtener_DMINd
+from carga_datos.ELIMci import obtener_ELIMci
+from carga_datos.CMAXc import obtener_CMAXc
+from carga_datos.Ai import obtener_Ai
+from carga_datos.AMAXc import obtener_AMAXc
+from carga_datos.CEi import obtener_CEi
+from carga_datos.Pid import obtener_Pid
+from carga_datos.Ctc import obtener_Ctc
 
 # ----------------------- Generacion del modelo ------------------------
 model = Model()
 model.setParam("TimeLimit", 1800)  # Establece el tiempo m ́aximo en segundos
 # ----------------------- Generacion de Rangos ------------------------
 I_ = range(1, n + 1)
-Iprima_ = Edificios[:m]
+Iprima_ = I_[:m]
 T_ = range(1, p + 1)
 D_ = range(1, 8 + 1)
 C_ = range(1, l + 1)
@@ -25,28 +37,36 @@ terreno_cumple_s2 = obtener_Xts2()
 terreno_cumple_s3 = obtener_Xts3()
 terreno_cumple_s4 = obtener_Xts4()
 terreno_cumple_trabajos = obtener_Yt()
+superficie_terrenos = obtener_STt()
+superficie_edificios = obtener_SEi()
+costo_terrenos = obtener_CTt()
+mininmo_beneficiados_decil = obtener_DMINd()
+limite_edificios_comuna = obtener_ELIMci()
+cant_max_nuevas_personas_comuna = obtener_CMAXc()
+altura_edificios = obtener_Ai()
+altura_maxima_comunas = obtener_AMAXc()
+costo_edificios = obtener_CEi()
+personas_decil_edificios = obtener_Pid()
+terrenos_comunas = obtener_Ctc()
 # ----------------------- Creacion de Parametros ------------------------
-PR =
-CT = {(t):}
-TMIN =
-CE = {(i):}
-P = {(i, d): }
-A = {(i):}
-DISTMAX =
+PR = PR
+CT = {(t): costo_terrenos[t - 1] for t in T_}
+CE = {(i): costo_edificios[i - 1] for i in I_}
+P = {(i, d): personas_decil_edificios[i - 1][d - 1] for i in I_ for d in D_}
+A = {(i): altura_edificios[i - 1] for i in I_}
 XS1 = {(t, s): terreno_cumple_s1[t - 1][s - 1] for t in T_ for s in S1_}
 XS2 = {(t, s): terreno_cumple_s2[t - 1][s - 1] for t in T_ for s in S2_}
 XS3 = {(t, s): terreno_cumple_s3[t - 1][s - 1] for t in T_ for s in S3_}
 XS4 = {(t, s): terreno_cumple_s4[t - 1][s - 1] for t in T_ for s in S4_}
-DMIN = {(d):}
-C = {(t, c): }
-CMAX = {(c):}
-ELIM = {(c, i): }
-AMAX = {(c):}
+DMIN = {(d): mininmo_beneficiados_decil[d - 1] for d in D_}
+C = {(t, c): terrenos_comunas[t - 1][c - 1] for t in T_ for c in C_}
+CMAX = {(c): cant_max_nuevas_personas_comuna[c - 1] for c in C_}
+ELIM = {(c, i): limite_edificios_comuna[c - 1][i - 1] for c in C_ for i in I_}
+AMAX = {(c): altura_maxima_comunas[c - 1] for c in C_}
 Y = {(t): terreno_cumple_trabajos[t - 1] for t in T_}
-MINCOM =
-SE = {(i):}
-ST = {(t):}
-
+MINCOM = MINCOM
+SE = {(i): superficie_edificios[i - 1] for i in I_}
+ST = {(t): superficie_terrenos[t - 1] for t in T_}
 
 # ----------------------- Creacion de Variables ------------------------
 Z = model.addVars(I_, T_, vtype=GRB.BINARY, name="Z_it")
@@ -57,12 +77,11 @@ B = model.addVars(C_, vtype=GRB.BINARY, name="B_c")
 model.addConstrs((quicksum(Z[i, t] for i in I_) <= 1 for t in T_), name="R1")
 
 # R2
-model.addConstrs((quicksum(
-    quicksum(Z[i, t] * (CT[t] + CE[i]) for i in I_) for t in T_) <= PR), name="R2")
+model.addConstr((quicksum(quicksum(Z[i, t] * (CT[t] + CE[i]) for i in I_) for t in T_) <= PR), name="R2")
 
 # R3
 model.addConstrs((quicksum(quicksum(
-    Z[i, t] * P[i, d] for i in I_) for t in T_) <= DMIN[d] for d in D_), name="R3")
+    Z[i, t] * P[i, d] for i in I_) for t in T_) >= DMIN[d] for d in D_), name="R3")
 
 # R4
 model.addConstrs((quicksum(XS1[t, s] for s in S1_) + quicksum(XS4[t, s]
@@ -85,7 +104,7 @@ model.addConstrs((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
                  for i in I_) >= 1 + M * (B[c] - 1) for c in C_), name="R7")
 
 # R8
-model.addConstrs((quicksum(B[c] for c in C_) >= MINCOM), name="R8")
+model.addConstr((quicksum(B[c] for c in C_) >= MINCOM), name="R8")
 
 # R9
 model.addConstrs((quicksum(XS4[t, s] for s in S4_) + Y[t] >=
@@ -110,9 +129,10 @@ model.setObjective(obj, GRB.MAXIMIZE)
 model.optimize()
 valor_objetivo = model.ObjVal
 
-print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}\n")
-
-print("Para lograr este valor se deben construir en los siguientes terrenos los edificios respectivos.\n")
+print("\n+--------------------------------------------------------------------------------------------------+")
+print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}")
+print("+--------------------------------------------------------------------------------------------------+\n")
+print("Para lograr este valor se deben construir en los siguientes terrenos y los edificios respectivos.\n")
 
 print("+----------+----------+")
 print("|Terreno   |Edificio  |")

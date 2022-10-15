@@ -11,16 +11,17 @@ p = 2000
 l = 6
 # numero de cada servicio 
 s1 = 600
-s2 = 18
-s3 = 10
-s4 = 78
+s2 = 600
+s3 = 600
+s4 = 39
 
 # ------------------------- OTROS --------------------------
-PR = 22000000
+# presupuesto total
+PR = 9500000
 
-TMIN = 10
+# minimo de comunas beneficiadas 
+MINCOM = 2
 
-DISTMAX = 
-
-MINCOM = 
+# numero muy grande 
+M = 10**20
 
