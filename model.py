@@ -1,6 +1,6 @@
 from gurobipy import Model, GRB, quicksum
 
-from datos.parametros import n,m,p,l,s1,s2,s3,s4,PR,TMIN,MINCOM,M
+from datos.parametros import n,m,p,l,s1,s2,s3,s4,PR,MINCOM,M
 from carga_datos.Yt import obtener_Yt
 from carga_datos.Xts1 import obtener_Xts1
 from carga_datos.Xts2 import obtener_Xts2
@@ -51,7 +51,6 @@ terrenos_comunas = obtener_Ctc()
 # ----------------------- Creacion de Parametros ------------------------
 PR = PR
 CT = {(t): costo_terrenos[t - 1] for t in T_}
-TMIN = TMIN
 CE = {(i): costo_edificios[i - 1] for i in I_}
 P = {(i, d): personas_decil_edificios[i - 1][d - 1] for i in I_ for d in D_}
 A = {(i): altura_edificios[i - 1] for i in I_}
@@ -130,9 +129,10 @@ model.setObjective(obj, GRB.MAXIMIZE)
 model.optimize()
 valor_objetivo = model.ObjVal
 
-print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}\n")
-
-print("Para lograr este valor se deben construir en los siguientes terrenos los edificios respectivos.\n")
+print("\n+--------------------------------------------------------------------------------------------------+")
+print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}")
+print("+--------------------------------------------------------------------------------------------------+\n")
+print("Para lograr este valor se deben construir en los siguientes terrenos y los edificios respectivos.\n")
 
 print("+----------+----------+")
 print("|Terreno   |Edificio  |")

@@ -16,12 +16,12 @@ s3 = 600
 s4 = 39
 
 # ------------------------- OTROS --------------------------
-PR = 22000000
+# presupuesto total
+PR = 22000000/2
 
-TMIN = 10
-
+# minimo de comunas beneficiadas 
 MINCOM = 2
 
 # numero muy grande 
-M = 10**100
+M = 10**20
 
