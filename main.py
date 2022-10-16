@@ -130,7 +130,7 @@ model.optimize()
 valor_objetivo = model.ObjVal
 
 print("\n+--------------------------------------------------------------------------------------------------+")
-print(f"Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}")
+print(f"  Las personas beneficiadas por el proyecto de viviendas sociales serán: {valor_objetivo}")
 print("+--------------------------------------------------------------------------------------------------+\n")
 print("Para lograr este valor se deben construir en los siguientes terrenos y los edificios respectivos.\n")
 
@@ -145,7 +145,10 @@ for t in T_:
             print(cadena)
             for d in D_:
                 total_beneficiados_decil[d - 1] += P[i,d]
+
 print("+----------+----------+\n")
+
+print("La cantidad de beneficiados por cada decil son las presentadas a continuación:\n")
 
 print("+--------+------------+")
 print("|Decil   |Beneficiados|")
@@ -154,6 +157,17 @@ for d in D_:
     cadena = "|{:<8}|{:<12}|".format(d, total_beneficiados_decil[d - 1])
     print(cadena)
 print("+--------+------------+")
+
+inversion = 0
+for i in I_:
+    for t in T_:
+        inversion += (Z[i, t].x * (CT[t] + CE[i]))
+
+print("\n+--------------------------------------------------------------------------------------------------+")
+print(f"  Se deben invertir {int(inversion)} UF de un total de {PR} UF")
+print("+--------------------------------------------------------------------------------------------------+\n")
+
+
 
 with open("resultados/resultados_Z.csv", "w") as archivo: 
     archivo.write("Z,i,t")

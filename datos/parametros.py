@@ -20,7 +20,7 @@ s4 = 64
 PR = 9500000
 
 # minimo de comunas beneficiadas 
-MINCOM = 4
+MINCOM = 2
 
 # numero muy grande 
 M = 10**20
