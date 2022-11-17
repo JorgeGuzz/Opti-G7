@@ -100,8 +100,12 @@ model.addConstrs((quicksum(Z[i, t] * C[t, c] for t in T_)
                  <= ELIM[c, i] for c in C_ for i in I_), name="R6")
 
 # R7 
-model.addConstrs(((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
-                 for i in I_)) >= 1 + M * (B[c] - 1) for c in C_), name="R7")
+model.addConstrs((((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
+                 for i in I_)) <= M*B[c]) for c in C_), name="R7")
+
+# R7.2
+model.addConstrs((((quicksum(quicksum(Z[i, t] * C[t, c] for t in T_)
+                 for i in I_)) >= B[c]) for c in C_), name="R7.2")
 
 # R8
 model.addConstr(((quicksum(B[c] for c in C_)) >= MINCOM), name="R8")
@@ -135,18 +139,20 @@ print("+------------------------------------------------------------------------
 print("Para lograr este valor se deben construir en los siguientes terrenos y los edificios respectivos.\n")
 
 total_beneficiados_decil = [0,0,0,0,0,0,0,0]
-print("+----------+----------+")
-print("|Terreno   |Edificio  |")
-print("+----------+----------+")
+print("+----------+----------+----------+")
+print("|Terreno   |Edificio  |Comuna    |")
+print("+----------+----------+----------+")
 for t in T_:
     for i in I_:
         if Z[i,t].x == 1:
-            cadena = "|{:<10}|{:<10}|".format(t, i)
-            print(cadena)
-            for d in D_:
-                total_beneficiados_decil[d - 1] += P[i,d]
+            for c in C_:
+                if C[t,c] == 1:
+                    cadena = "|{:<10}|{:<10}|{:<10}|".format(t, i, c)
+                    print(cadena)
+                    for d in D_:
+                        total_beneficiados_decil[d - 1] += P[i,d]
 
-print("+----------+----------+\n")
+print("+----------+----------+----------+\n")
 
 print("La cantidad de beneficiados por cada decil son las presentadas a continuación:\n")
 
