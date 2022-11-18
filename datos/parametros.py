@@ -7,21 +7,20 @@ n = 10
 m = 4
 # numero de terrenos
 p = 2000
-# numero de comunas 
+# numero de comunas
 l = 6
-# numero de cada servicio 
+# numero de cada servicio
 s1 = 4314
 s2 = 82
-s3 = 327 
+s3 = 327
 s4 = 64
 
 # ------------------------- OTROS --------------------------
 # presupuesto total
 PR = 9500000
 
-# minimo de comunas beneficiadas 
+# minimo de comunas beneficiadas
 MINCOM = 4
 
-# numero muy grande 
+# numero muy grande
 M = 10**20
-
