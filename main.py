@@ -173,7 +173,11 @@ print("\n+----------------------------------------------------------------------
 print(f"  Se deben invertir {int(inversion)} UF de un total de {PR} UF")
 print("+--------------------------------------------------------------------------------------------------+\n")
 
-
+# Holguras (0 significa que la restricción es activa)
+print("\n"+"-"*9+" Restricciones Activas "+"-"*9)
+for constr in model.getConstrs():
+    if constr.getAttr("slack") == 0:
+        print(f"La restriccion {constr} está activa")
 
 with open("resultados/resultados_Z.csv", "w") as archivo: 
     archivo.write("Z,i,t")
@@ -185,3 +189,5 @@ with open("resultados/resultados_B.csv", "w") as archivo:
     archivo.write("B,c")
     for c in C_:
         archivo.write(f"\n{B[c].x},{c}")
+
+    
